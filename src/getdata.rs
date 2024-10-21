@@ -101,7 +101,7 @@ impl Dirfile {
         let field_code_ptr = field_code.as_ptr();
 
         // Extract the data based on its type and convert to `Vec<f64>`.
-        let data = match field_type {
+        let data: Vec<f64> = match field_type {
             gd_type_t_GD_UINT8 => {
                 // Handle unsigned 8-bit integer data.
                 let mut raw_data = vec![0u8; total_samples as usize];

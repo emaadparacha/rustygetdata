@@ -1,7 +1,5 @@
 # RustyGetData
-GetData - But the Rust version
-
----------------------
+###### GetData - But the Rust version
 
 ## Introduction
 `rustygetdata` is a Rust Wrapper for the GetData Library - used to access, read, write, and work with Dirfiles. You can find more information on [GetData here](https://getdata.sourceforge.net/getdata.html), along with links to other bindings and wrappers. `rustygetdata` takes away the pain of C and instead allows you to use GetData in Rust!

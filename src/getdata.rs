@@ -96,14 +96,13 @@ impl Dirfile {
         let nframes = self.nframes();
         let samples_per_frame = self.spf(field);
         let total_samples = nframes * (samples_per_frame as i64);
-
+    
         let field_code = CString::new(field).expect("CString::new failed");
         let field_code_ptr = field_code.as_ptr();
-
+    
         // Extract the data based on its type and convert to `Vec<f64>`.
         let data: Vec<f64> = match field_type {
             gd_type_t_GD_UINT8 => {
-                // Handle unsigned 8-bit integer data.
                 let mut raw_data = vec![0u8; total_samples as usize];
                 unsafe {
                     gd_getdata(
@@ -119,7 +118,6 @@ impl Dirfile {
                 raw_data.iter().map(|&v| v as f64).collect()
             }
             gd_type_t_GD_INT8 => {
-                // Handle signed 8-bit integer data.
                 let mut raw_data = vec![0i8; total_samples as usize];
                 unsafe {
                     gd_getdata(
@@ -134,15 +132,97 @@ impl Dirfile {
                 }
                 raw_data.iter().map(|&v| v as f64).collect()
             }
-            // Other data types (GD_UINT16, GD_INT16, GD_UINT32, etc.) follow a similar pattern.
-            gd_type_t_GD_UINT16 => { /* ... */ }
-            gd_type_t_GD_INT16 => { /* ... */ }
-            gd_type_t_GD_UINT32 => { /* ... */ }
-            gd_type_t_GD_INT32 => { /* ... */ }
-            gd_type_t_GD_UINT64 => { /* ... */ }
-            gd_type_t_GD_INT64 => { /* ... */ }
+            gd_type_t_GD_UINT16 => {
+                let mut raw_data = vec![0u16; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_UINT16,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
+            gd_type_t_GD_INT16 => {
+                let mut raw_data = vec![0i16; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_INT16,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
+            gd_type_t_GD_UINT32 => {
+                let mut raw_data = vec![0u32; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_UINT32,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
+            gd_type_t_GD_INT32 => {
+                let mut raw_data = vec![0i32; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_INT32,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
+            gd_type_t_GD_UINT64 => {
+                let mut raw_data = vec![0u64; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_UINT64,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
+            gd_type_t_GD_INT64 => {
+                let mut raw_data = vec![0i64; total_samples as usize];
+                unsafe {
+                    gd_getdata(
+                        self.dirfile_open,
+                        field_code_ptr,
+                        0, 0,
+                        nframes as usize,
+                        samples_per_frame as usize,
+                        gd_type_t_GD_INT64,
+                        raw_data.as_mut_ptr() as *mut ::std::os::raw::c_void,
+                    );
+                }
+                raw_data.iter().map(|&v| v as f64).collect()
+            }
             gd_type_t_GD_FLOAT32 => {
-                // Handle 32-bit floating-point data.
                 let mut raw_data = vec![0.0f32; total_samples as usize];
                 unsafe {
                     gd_getdata(
@@ -158,7 +238,6 @@ impl Dirfile {
                 raw_data.iter().map(|&v| v as f64).collect()
             }
             gd_type_t_GD_FLOAT64 => {
-                // Handle 64-bit floating-point data directly.
                 let mut raw_data = vec![0.0f64; total_samples as usize];
                 unsafe {
                     gd_getdata(
@@ -174,7 +253,6 @@ impl Dirfile {
                 raw_data
             }
             gd_type_t_GD_STRING => {
-                // Handle string data and attempt to convert to f64.
                 let mut raw_data = vec![CString::new("").unwrap(); total_samples as usize];
                 unsafe {
                     gd_getdata(
@@ -193,14 +271,13 @@ impl Dirfile {
                     .collect()
             }
             _ => {
-                // Handle unknown field types.
                 println!("Unknown field type: {}", field_type);
                 Vec::new()
             }
         };
-
+    
         data // Return the processed data.
-    }
+    }    
 }
 
 #[cfg(test)]

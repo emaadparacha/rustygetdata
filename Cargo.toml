@@ -5,7 +5,6 @@ authors = ["Emaad Paracha <emaad@emaadparacha.com>"]
 edition = "2021"
 description = "A Rust Wrapper for the GetData Library - Used to access, read, write, and work with Dirfiles."
 license = "LGPL-2.1"
-license-file = "LICENSE.txt"
 repository = "https://github.com/emaadparacha/rustygetdata"
 build = "build.rs"
 
